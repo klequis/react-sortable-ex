@@ -6,8 +6,14 @@ import {
 } from 'react-sortable-hoc'
 import arrayMove from 'array-move'
 import styled from 'styled-components'
-import MoreVert from './MoreVert'
+import TextField from '@material-ui/core/TextField'
+import IconButton from '@material-ui/core/IconButton'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
 
+const options = ['One', 'Two']
+const ITEM_HEIGHT = 48
 
 const Handle = styled.div`
   position: 'relative';
@@ -53,70 +59,69 @@ const ListItemContent = styled.div`
 
 const TitleInput = styled.input`
   width: 100%;
-`;
+`
 
-class ListContent extends React.Component {
-  state = {
-    _value: this.props.vlaue
-  }
-
-  handleValueChange = e => {
+const ListContent = value => {
+  const [_value, _setValue] = useState({ value })
+  const [anchorEl, setAnchorEl] = React.useState(null)
+  const open = Boolean(anchorEl)
+  
+  const handleValueChange = e => {
     this.setState({
       value: e.target.value
     })
   }
-  render() {
-    return (
-      <ListItemContent>
-        <TitleInput value={this.state._value} onChange={this.handleValueChange} />
-        <MoreVert fill="orange" />
-      </ListItemContent>
-    )
+
+  const handleMoreClick = e => {
+    setAnchorEl(e.currentTarget)
   }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+  return (
+    <ListItemContent>
+      <TextField
+        label="Title"
+        value={_value}
+        onChange={this.handleValueChange}
+      />
+      <IconButton
+        aria-label="more"
+        aria-controls="long-menu"
+        aria-haspopup="true"
+        onClick={handleMoreClick}
+      >
+        <MoreVertIcon />
+      </IconButton>
+    </ListItemContent>
+  )
 }
 
 // const DragHandle = sortableHandle(() => <div style={handle}>::</div>)
 const DragHandle = sortableHandle(() => <Handle>::</Handle>)
-
-
-const SortableItem = sortableElement(({ value }) => (
-  // <li style={listItem}>
-  //   <DragHandle />
-  //   <ListContent />
-  // </li>
-  <ListItem>
-    <DragHandle />
-    <ListContent />
-  </ListItem>
-))
 
 const SortableContainer = sortableContainer(({ children }) => {
   // return <ul style={listStyle}>{children}</ul>
   return <List>{children}</List>
 })
 
-class App extends Component {
-  state = {
-    items: ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6']
+const App = () => {
+  const initItems = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6']
+  const [items, setItems] = useState(initItems)
+
+  const onSortEnd = ({ oldIndex, newIndex }) => {
+    const newItems = arrayMove(items, oldIndex, newIndex)
+    setItems(newItems)
   }
 
-  onSortEnd = ({ oldIndex, newIndex }) => {
-    this.setState(({ items }) => ({
-      items: arrayMove(items, oldIndex, newIndex)
-    }))
-  }
-
-  render() {
-    const { items } = this.state
-
-    return (
-      <SortableContainer onSortEnd={this.onSortEnd} useDragHandle>
-        {items.map((value, index) => (
-          <SortableItem key={`item-${value}`} index={index} value={value} />
-        ))}
-      </SortableContainer>
-    )
-  }
+  return (
+    <SortableContainer onSortEnd={onSortEnd} useDragHandle>
+      {items.map((value, index) => (
+        <SortableItem key={`item-${value}`} index={index} value={value} />
+      ))}
+    </SortableContainer>
+  )
 }
 
 export default App
