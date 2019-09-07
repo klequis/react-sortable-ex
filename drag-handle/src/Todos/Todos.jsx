@@ -5,41 +5,55 @@ import {
   sortableHandle
 } from 'react-sortable-hoc'
 import arrayMove from 'array-move'
+import styled from 'styled-components'
+import MoreVert from './MoreVert'
 
-const listStyle = {
-  listStyle: 'none',
-  position: 'relative',
-  zIndex: 0,
-  backgroundColor: '#f3f3fe',
-  border: '1px solid #efefef',
-  outline: 'none',
-  userSelect: 'none', // solves the selection while drag problem
-  color: '#333',
-  fontWeight: 300
-}
 
-const listItem = {
-  display: 'flex', // gets rid of bullet on drag
-  webkitBoxAlign: 'center',
-  alignItems: 'center',
-  width: '100%',
-  padding: '0 20px',
-  backgroundColor: '#fff',
-  boxSizing: 'border-box',
-  position: 'relative'
-}
+const Handle = styled.div`
+  position: 'relative';
+  display: 'block';
+  width: 18;
+  opacity: 0.5;
+  margin-right: 20px;
+  cursor: row-size;
+`
 
-const handle = {
-  position: 'relative',
-  // top: 1,
-  display: 'block',
-  width: 18,
-  // height: 11,
-  opacity: 0.5,
-  marginRight: 20,
-  cursor: 'row-size'
-  // background: 'linear-gradient(180deg,#000,#000 20%,#fff 0,#fff 40%,#000 0,#000 60%,#fff 0,#fff 80%,#000 0,#000)',
-}
+const List = styled.ul`
+  list-style: none;
+  position: relative;
+  z-index: 0;
+  background-color: #f3f3fe;
+  border: 1px solid #efefef;
+  outline: none;
+  user-select: none;
+  color: #333;
+  font-weight: 300;
+`
+
+const ListItem = styled.li`
+  -webkit-box-align: center;
+  align-items: center;
+  background-color: #fff;
+  box-sizing: border-box;
+  display: flex;
+  margin-bottom: 5px;
+  padding: 0 20px;
+  position: relative;
+  width: 100%;
+  :first-child {
+    margin-top: 5px;
+  }
+`
+const ListItemContent = styled.div`
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+`
+
+const TitleInput = styled.input`
+  width: 100%;
+`;
 
 class ListContent extends React.Component {
   state = {
@@ -52,21 +66,33 @@ class ListContent extends React.Component {
     })
   }
   render() {
-    return <input value={this.state._value} onChange={this.handleValueChange} />
+    return (
+      <ListItemContent>
+        <TitleInput value={this.state._value} onChange={this.handleValueChange} />
+        <MoreVert fill="orange" />
+      </ListItemContent>
+    )
   }
 }
 
-const DragHandle = sortableHandle(() => <div style={handle}>::</div>)
+// const DragHandle = sortableHandle(() => <div style={handle}>::</div>)
+const DragHandle = sortableHandle(() => <Handle>::</Handle>)
+
 
 const SortableItem = sortableElement(({ value }) => (
-  <li style={listItem}>
+  // <li style={listItem}>
+  //   <DragHandle />
+  //   <ListContent />
+  // </li>
+  <ListItem>
     <DragHandle />
     <ListContent />
-  </li>
+  </ListItem>
 ))
 
 const SortableContainer = sortableContainer(({ children }) => {
-  return <ul style={listStyle}>{children}</ul>
+  // return <ul style={listStyle}>{children}</ul>
+  return <List>{children}</List>
 })
 
 class App extends Component {

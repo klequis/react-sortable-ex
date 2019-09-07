@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import DragHandle from './DragHandle'
 import styled from 'styled-components'
-import moreVert from 'media/moreVert.svg'
+import MoreVert from './Todos/MoreVert'
 
 const Button = styled.button`
   background-color: transparent;
@@ -52,7 +52,9 @@ const ItemContent = initValue => {
         <TitleInput value={title} onChange={handleTitleChange} />
       </Left>
 
-      <Button onClick={onButtonClick}><img src={moreVert} alt='more' /></Button>
+      <Button onClick={onButtonClick}>
+        <MoreVert fill="orange" />
+      </Button>
     </ItemContentWrapper>
   )
 }
