@@ -1,10 +1,18 @@
 import React, { useState } from 'react'
 import DragHandle from './DragHandle'
 import styled from 'styled-components'
+import moreVert from 'media/moreVert.svg'
 
 const Button = styled.button`
-  background-color: green;
+  background-color: transparent;
   margin-left: 5px;
+  /* height: 100px;
+  width: 100px; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  border: none;
 `
 
 const TitleInput = styled.input`
@@ -44,7 +52,7 @@ const ItemContent = initValue => {
         <TitleInput value={title} onChange={handleTitleChange} />
       </Left>
 
-      <Button onClick={onButtonClick}>{btnValue}</Button>
+      <Button onClick={onButtonClick}><img src={moreVert} alt='more' /></Button>
     </ItemContentWrapper>
   )
 }
