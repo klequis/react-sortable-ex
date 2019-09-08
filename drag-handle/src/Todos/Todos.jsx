@@ -11,6 +11,8 @@ import IconButton from '@material-ui/core/IconButton'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
+import DragHandleIcon from '@material-ui/icons/DragHandle'
+import Checkbox from '@material-ui/core/Checkbox'
 
 const options = ['One', 'Two']
 const ITEM_HEIGHT = 48
@@ -61,15 +63,17 @@ const TitleInput = styled.input`
   width: 100%;
 `
 
-const ListContent = value => {
-  const [_value, _setValue] = useState({ value })
-  const [anchorEl, setAnchorEl] = React.useState(null)
+const ListContent = ({ value }) => {
+  console.log('value', value)
+  const [_value, _setValue] = useState(value)
+  const [anchorEl, setAnchorEl] = useState(null)
+  const [completed, setCompleted] = useState(false)
   const open = Boolean(anchorEl)
   
   const handleValueChange = e => {
-    this.setState({
-      value: e.target.value
-    })
+    const val = e.target.value
+    console.log('val', val)
+    _setValue(e.target.value)
   }
 
   const handleMoreClick = e => {
@@ -79,13 +83,22 @@ const ListContent = value => {
   const handleClose = () => {
     setAnchorEl(null)
   }
+
+  const handleCompleteClick = (e) => {
+    const b = e.target.checked
+    setCompleted(b)
+  }
   return (
     <ListItemContent>
-      <TextField
-        label="Title"
-        value={_value}
-        onChange={this.handleValueChange}
+      <Checkbox
+        checked={completed}
+        onChange={handleCompleteClick}
+        value="checkedA"
+        inputProps={{
+          'aria-label': 'primary checkbox'
+        }}
       />
+      <TextField label="Title" value={_value} onChange={handleValueChange} />
       <IconButton
         aria-label="more"
         aria-controls="long-menu"
@@ -94,17 +107,51 @@ const ListContent = value => {
       >
         <MoreVertIcon />
       </IconButton>
+      <Menu
+        id="more-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            maxHeight: ITEM_HEIGHT * 4.5,
+            width: 200
+          }
+        }}
+      >
+        {options.map(option => (
+          <MenuItem
+            key={option}
+            selected={option === 'Pyxis'}
+            onClick={handleClose}
+          >
+            {option}
+          </MenuItem>
+        ))}
+      </Menu>
     </ListItemContent>
   )
 }
 
 // const DragHandle = sortableHandle(() => <div style={handle}>::</div>)
-const DragHandle = sortableHandle(() => <Handle>::</Handle>)
+const DragHandle = sortableHandle(() => <DragHandleIcon />)
 
 const SortableContainer = sortableContainer(({ children }) => {
   // return <ul style={listStyle}>{children}</ul>
   return <List>{children}</List>
 })
+
+const SortableItem = sortableElement(({ value }) => (
+  // <li style={listItem}>
+  //   <DragHandle />
+  //   <ListContent />
+  // </li>
+  <ListItem>
+    <DragHandle />
+    <ListContent value={value} />
+  </ListItem>
+))
 
 const App = () => {
   const initItems = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6']
