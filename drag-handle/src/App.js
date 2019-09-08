@@ -1,21 +1,28 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Todos from './Todos'
 import styled from 'styled-components'
 
-const AppWrapper = styled.div`
+const Page = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 5% 10%;
+  /* padding: 5% 10%; */
+  /* padding: 5%; */
   background-color: gray;
 `
+
+const AppWrapper = styled.div`
+  padding: 5% 10%;
+`;
 
 const App = () => {
 
   return (
-    <AppWrapper>
-      <Todos />
-    </AppWrapper>
+    <Page>
+      <AppWrapper>
+        <Todos />
+      </AppWrapper>
+    </Page>
   )
 }
 
